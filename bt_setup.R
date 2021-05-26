@@ -20,6 +20,10 @@ money_train %>%
   select(money_made_inv, acc_now_delinq, acc_open_past_24mths, annual_inc, avg_cur_bal, bc_util, delinq_2yrs, delinq_amnt, dti, int_rate, loan_amnt, mort_acc, num_sats, num_tl_120dpd_2m, num_tl_30dpd, num_tl_90g_dpd_24m, out_prncp_inv, pub_rec, pub_rec_bankruptcies, tot_coll_amt, tot_cur_bal, total_rec_late_fee) %>% 
   cor(use = "complete.obs")
 
+## create resamples
+set.seed(57)
+money_fold <- vfold_cv(money_train, v = 10, repeats = 5, strata = money_made_inv)
+
 ## create recipe
 money_recipe <- recipe(money_made_inv ~ loan_amnt + out_prncp_inv + grade + num_tl_120dpd_2m + term,  data = money_train) %>% 
   step_other(all_nominal(), threshold = 0.2) %>% 
